@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Orígenes · Constructora e Inmobiliaria
 
-## Getting Started
+Sitio web de Orígenes, constructora e inmobiliaria: lotes, terrenos e infraestructura vial.
 
-First, run the development server:
+Hecho con Next.js, React y TypeScript.
 
-```bash
+## Requisitos
+
+- [Node.js](https://nodejs.org) 20.9 o superior (se recomienda la versión LTS).
+
+Para saber si ya lo tienes, escribe `node -v` en una terminal. Si aparece un número como `v24.14.0`, ya está instalado.
+
+## Ejecutar la web por primera vez
+
+Abre una terminal (en VS Code: menú **Terminal → Nueva terminal**) y pega estos comandos:
+
+```powershell
+cd C:\dev\constructora
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- `cd C:\dev\constructora` entra a la carpeta del proyecto.
+- `npm install` descarga lo que necesita la web. Solo hace falta la primera vez, o cuando cambien las dependencias del proyecto.
+- `npm run dev` enciende la web.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Ejecutar la web las siguientes veces
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```powershell
 
-## Learn More
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Ver la web
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Cuando la terminal muestre esto, la web está funcionando:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+▲ Next.js 16.4.2 (Turbopack)
+- Local:         http://localhost:3000
+✓ Ready in 1s
+```
 
-## Deploy on Vercel
+Abre **http://localhost:3000** en el navegador. 
+Mientras la terminal siga abierta, la web se actualiza sola cada vez que guardas un cambio.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Apagar la web
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+En la terminal donde está corriendo, presiona **Ctrl + C**.
+
+## Si algo falla
+
+- **«El puerto 3000 está en uso»**: la web ya está encendida en otra terminal. Ciérrala con Ctrl + C, o abre directamente http://localhost:3000.
+- **«La ejecución de scripts está deshabilitada en este sistema»**: ejecuta esto una sola vez en PowerShell y vuelve a intentarlo:
+
+  ```powershell
+  Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+  ```
+
+## Secuencia de imágenes del hero
+
+La animación de la casa usa los fotogramas de `public/media/scrollytelling/frames_timelapse_house` (originales, no se tocan). Si cambias esos fotogramas, genera de nuevo las versiones ligeras con:
+
+```powershell
+node scripts/optimize-sequence.mjs
+```
+
+Luego actualiza la cantidad de fotogramas en `heroSequence` (`src/content/site.ts`).

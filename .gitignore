@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# secuencia original del hero (96 MB): solo se versiona la versión optimizada
+/public/media/scrollytelling/frames_timelapse_house/

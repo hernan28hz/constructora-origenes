@@ -1,0 +1,133 @@
+.split {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background: var(--c-bg-deep);
+}
+
+.heading {
+  position: absolute;
+  top: clamp(1.5rem, 4vw, 2.5rem);
+  left: var(--gutter);
+  z-index: 2;
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+.path {
+  position: relative;
+  display: grid;
+  align-items: end;
+  min-height: clamp(26rem, 80svh, 48rem);
+  overflow: hidden;
+  isolation: isolate;
+  text-decoration: none;
+  color: var(--c-text);
+  background: var(--c-bg);
+}
+
+.image {
+  z-index: -2;
+  object-fit: cover;
+  transition: transform 1.4s var(--ease-out);
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to top, color-mix(in srgb, var(--c-overlay) 85%, transparent), color-mix(in srgb, var(--c-overlay) 15%, transparent) 65%);
+  transition: background-color 0.6s ease;
+}
+
+/* Panel sin fotografía: trazado de curvas de nivel en lugar de imagen. */
+.survey {
+  background:
+    repeating-radial-gradient(circle at 78% 30%, transparent 0 38px, color-mix(in srgb, var(--c-text) 7%, transparent) 38px 39px),
+    linear-gradient(160deg, var(--c-bg), var(--c-bg-deep) 70%);
+}
+
+.body {
+  display: grid;
+  gap: 0.9rem;
+  padding: 0 var(--gutter) clamp(4.5rem, 9vw, 6rem);
+  max-width: 34rem;
+}
+
+.kicker {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: clamp(2.25rem, 4.4vw, 3.75rem);
+  line-height: 1.02;
+  letter-spacing: var(--tracking-display);
+}
+
+.text {
+  line-height: 1.6;
+  color: var(--c-text-soft);
+}
+
+.more {
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: transform 0.5s var(--ease-out);
+}
+
+.tag {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 1.5rem;
+}
+
+.path:hover .image,
+.path:focus-visible .image {
+  transform: scale(1.05);
+}
+
+.path:hover .more,
+.path:focus-visible .more {
+  transform: translateX(0.5rem);
+}
+
+.path:focus-visible {
+  outline-offset: -4px;
+}
+
+@media (max-width: 800px) {
+  .split {
+    grid-template-columns: 1fr;
+  }
+
+  .heading {
+    position: static;
+    padding: 3rem var(--gutter) 1.5rem;
+    background: var(--c-bg);
+  }
+
+  .tag {
+    right: auto;
+    left: var(--gutter);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image,
+  .more {
+    transition: none;
+  }
+}

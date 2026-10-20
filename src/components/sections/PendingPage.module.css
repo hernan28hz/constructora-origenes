@@ -1,0 +1,92 @@
+.page {
+  padding: calc(var(--header-h) + clamp(3rem, 9vw, 7rem)) var(--gutter) clamp(4rem, 9vw, 7rem);
+  background:
+    repeating-radial-gradient(circle at 92% 0%, transparent 0 46px, color-mix(in srgb, var(--c-text) 4.5%, transparent) 46px 47px),
+    var(--c-bg);
+}
+
+.header {
+  max-width: 52rem;
+  padding-bottom: clamp(2.5rem, 6vw, 4rem);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.kicker {
+  margin: 0 0 1.25rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  line-height: 1;
+  letter-spacing: var(--tracking-display);
+}
+
+.lead {
+  max-width: 38rem;
+  margin: 1.75rem 0 0;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--c-text-soft);
+}
+
+.sheet {
+  max-width: 52rem;
+  padding-block: 2.5rem;
+  border-bottom: 1px solid var(--c-line);
+}
+
+.sheetTitle {
+  margin: 0 0 1.5rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+}
+
+.sheet dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1.25rem 2rem;
+  margin: 0;
+}
+
+.sheet dt {
+  margin-bottom: 0.35rem;
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.sheet dd {
+  margin: 0;
+}
+
+.plan {
+  max-width: 52rem;
+  padding-top: 2.5rem;
+}
+
+.planTitle {
+  margin: 0 0 1rem;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.plan ul {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--c-text-soft);
+}

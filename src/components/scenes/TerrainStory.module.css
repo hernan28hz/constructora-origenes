@@ -1,0 +1,203 @@
+/* ---------- Versión base: paneles apilados (sin JS o movimiento reducido) ---------- */
+
+.story {
+  position: relative;
+  background: var(--c-bg);
+  color: var(--c-text);
+}
+
+.stage {
+  position: relative;
+}
+
+.eyebrow {
+  margin: 0;
+  padding: clamp(4rem, 10vw, 7rem) var(--gutter) 2rem;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+.frames {
+  display: grid;
+  gap: 2px;
+}
+
+.panel {
+  position: relative;
+  margin: 0;
+  min-height: min(100svh, 56.25vw + 18rem);
+  overflow: hidden;
+  display: grid;
+  align-items: end;
+}
+
+.image {
+  object-fit: cover;
+  object-position: 58% 50%;
+  transform-origin: 60% 45%;
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, color-mix(in srgb, var(--c-overlay) 82%, transparent) 0%, color-mix(in srgb, var(--c-overlay) 20%, transparent) 50%, transparent 75%),
+    linear-gradient(to right, color-mix(in srgb, var(--c-overlay) 55%, transparent), transparent 55%);
+}
+
+.caption {
+  position: relative;
+  display: grid;
+  gap: 0.9rem;
+  max-width: 36rem;
+  padding: 0 var(--gutter) clamp(4.5rem, 12vh, 7rem);
+}
+
+.stepLabel {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.stepTitle {
+  font-family: var(--font-display);
+  font-weight: var(--fw-display);
+  font-size: clamp(2rem, 4.6vw, 4rem);
+  line-height: 1.04;
+  letter-spacing: var(--tracking-display);
+}
+
+.stepText {
+  max-width: 28rem;
+  line-height: 1.6;
+  color: var(--c-text-soft);
+}
+
+.hud {
+  display: none;
+}
+
+.tag {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 1.5rem;
+}
+
+/* ---------- Versión cinematográfica: tomas superpuestas y fijas ---------- */
+
+.story[data-scrolly] {
+  height: 420svh;
+}
+
+.story[data-scrolly] .stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.story[data-scrolly] .eyebrow {
+  position: absolute;
+  top: calc(var(--header-h) + 1.5rem);
+  left: 0;
+  z-index: 2;
+  padding: 0 var(--gutter);
+}
+
+.story[data-scrolly] .frames {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  display: block;
+}
+
+.story[data-scrolly] .panel {
+  position: absolute;
+  inset: 0;
+  min-height: 0;
+}
+
+.story[data-scrolly] .image {
+  will-change: transform;
+}
+
+.story[data-scrolly] .hud {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: 1.5rem;
+  z-index: 2;
+  display: grid;
+  gap: 0.75rem;
+  max-width: 34rem;
+}
+
+.steps {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.steps li {
+  transition: color 0.4s ease;
+}
+
+.steps li[data-active] {
+  color: var(--c-text);
+}
+
+.progress {
+  position: relative;
+  display: block;
+  height: 1px;
+  background: var(--c-line);
+}
+
+.progressFill {
+  position: absolute;
+  inset: 0;
+  background: var(--c-accent);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+.story[data-scrolly] .tag {
+  z-index: 2;
+}
+
+@media (max-width: 700px) {
+  .caption {
+    padding-bottom: 6.5rem;
+  }
+
+  .steps {
+    gap: 1rem;
+  }
+
+  /* En móvil solo se nombra el paso activo. */
+  .steps li:not([data-active]) .stepName {
+    display: none;
+  }
+
+  .story[data-scrolly] .hud {
+    bottom: 3.75rem;
+  }
+
+  .story[data-scrolly] .caption {
+    padding-bottom: 7.5rem;
+  }
+}

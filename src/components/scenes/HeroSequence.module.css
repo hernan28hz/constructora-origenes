@@ -1,0 +1,506 @@
+/* ---------- Geometría compartida ---------- */
+
+.hero {
+  --title-fs: clamp(2.25rem, 8.6vw, 9rem);
+  --title-scale: 0.4;
+  --pad-top: calc(var(--header-h) + clamp(1.25rem, 4vh, 2.5rem));
+  --bottom-pad: clamp(4.75rem, 12vh, 8.5rem);
+  /* Alto del bloque del titular: eyebrow + dos líneas. */
+  --heading-h: calc(2.1rem + var(--title-fs) * 1.92);
+  /* Recorrido del titular, de abajo (inicio) a arriba (compacto). */
+  --drop: calc(100svh - var(--bottom-pad) - var(--heading-h) - var(--pad-top));
+  --compact-h: calc(var(--heading-h) * var(--title-scale));
+
+  position: relative;
+  color: var(--c-text);
+  background: var(--c-bg);
+}
+
+/* ---------- Versión base (sin movimiento): pantalla fija con foto ---------- */
+
+.stage {
+  position: relative;
+  min-height: 100svh;
+  overflow: hidden;
+  isolation: isolate;
+  --p: 0;
+}
+
+.media {
+  position: absolute;
+  inset: 0;
+  z-index: -4;
+  transform-origin: 50% 55%;
+  will-change: transform;
+}
+
+.poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 45% 50%;
+}
+
+/* La secuencia se dibuja sobre la foto y aparece por disolvencia. */
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Legibilidad: oscurece arriba (navegación) y abajo (titular y pie). */
+.shade {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--c-overlay) 62%, transparent) 0%,
+      color-mix(in srgb, var(--c-overlay) 18%, transparent) 22%,
+      transparent 42%,
+      color-mix(in srgb, var(--c-overlay) 30%, transparent) 62%,
+      color-mix(in srgb, var(--c-overlay) 82%, transparent) 100%
+    ),
+    linear-gradient(to right, color-mix(in srgb, var(--c-overlay) 40%, transparent), transparent 60%);
+}
+
+/* Refuerza el contraste del texto cuando sube bajo el titular. */
+.topShade {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  opacity: 0;
+  visibility: hidden;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--c-overlay) 78%, transparent) 0%,
+    color-mix(in srgb, var(--c-overlay) 52%, transparent) 30%,
+    transparent 58%
+  );
+}
+
+.layout {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: var(--pad-top) var(--gutter) var(--bottom-pad);
+}
+
+.eyebrow {
+  margin: 0 0 1rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+  text-shadow: 0 1px 14px color-mix(in srgb, var(--c-overlay) 70%, transparent);
+  animation: fade-up 0.9s var(--ease-out) 0.1s both;
+}
+
+/* Titular grande con relleno translúcido, como letras de vidrio. */
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--title-fs);
+  line-height: 0.9;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+/* Cada línea sube desde una máscara. */
+.line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.line > span {
+  display: block;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--c-text) 98%, transparent) 0%,
+    color-mix(in srgb, var(--c-text) 72%, transparent) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 2px 18px color-mix(in srgb, var(--c-overlay) 40%, transparent));
+  animation: rise 1.2s var(--ease-out) both;
+  animation-delay: calc(var(--i) * 140ms + 250ms);
+}
+
+.intro {
+  display: grid;
+  gap: 1.5rem;
+  justify-items: start;
+  max-width: 28rem;
+  margin-top: 1.75rem;
+}
+
+.lead {
+  margin: 0;
+  font-size: clamp(1rem, 1.3vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--c-text-soft);
+  text-shadow: 0 1px 12px color-mix(in srgb, var(--c-overlay) 55%, transparent);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Pie de la escena */
+.caption,
+.rail,
+.bridge,
+.endCue {
+  display: none;
+}
+
+.tag {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 1.5rem;
+}
+
+.cue,
+.endCue {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(1.25rem, 3.5vh, 2.25rem);
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.625rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+  transform: translateX(-50%);
+}
+
+/* `.endCue` solo se muestra en la escena animada (ver más abajo). */
+.cue {
+  display: inline-flex;
+}
+
+.cueLine {
+  position: relative;
+  width: 1px;
+  height: 2.25rem;
+  overflow: hidden;
+  background: var(--c-line);
+}
+
+.cueLine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--c-accent);
+  animation: cue 2.4s var(--ease-in-out) infinite;
+}
+
+/* Tres imágenes de la secuencia, solo en la versión sin movimiento. */
+.stills {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--c-bg-deep);
+}
+
+.stills li {
+  position: relative;
+}
+
+.stills img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.stills span {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-pill);
+  background: color-mix(in srgb, var(--c-overlay) 65%, transparent);
+  font-size: 0.6875rem;
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+
+/* ---------- Versión con movimiento: escena fijada mientras se recorre ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Titular abajo a la izquierda; sube y se compacta con --p (0 a 1). */
+  .hero:not([data-mode="static"]) .layout {
+    display: block;
+    padding: 0;
+  }
+
+  .hero:not([data-mode="static"]) .heading {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    top: calc(var(--pad-top) + var(--drop));
+    transform-origin: 0 0;
+    transform: translateY(calc(var(--p) * var(--drop) * -1))
+      scale(calc(1 - var(--p) * (1 - var(--title-scale))));
+    will-change: transform;
+  }
+
+  /* Texto y botones: llegan debajo del titular compacto, con el scroll. */
+  .hero:not([data-mode="static"]) .intro {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    top: calc(var(--pad-top) + var(--compact-h) + 1.25rem);
+    margin: 0;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .hero:not([data-mode="static"]) .canvas {
+    visibility: hidden;
+  }
+
+  .hero:not([data-mode="static"]) .tag {
+    z-index: 2;
+  }
+
+  .hero[data-scrolly="full"] {
+    height: 520svh;
+  }
+
+  .hero[data-scrolly="lite"] {
+    height: 420svh;
+  }
+
+  .hero[data-scrolly] .sticky {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .hero[data-scrolly] .stage {
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+  }
+
+  /* Subtítulo de cada paso, abajo a la izquierda. */
+  .hero[data-scrolly] .caption {
+    position: absolute;
+    z-index: 2;
+    left: var(--gutter);
+    bottom: var(--bottom-pad);
+    display: grid;
+    gap: 0.75rem;
+    max-width: 24rem;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .captionCount {
+    margin: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    font-variant-numeric: tabular-nums;
+    color: var(--c-accent);
+  }
+
+  .captionBody {
+    display: grid;
+    gap: 0.4rem;
+    animation: fade-up 0.6s var(--ease-out) both;
+  }
+
+  .captionLabel {
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 3.2vw, 2.75rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+
+  .captionText {
+    margin: 0;
+    font-size: clamp(0.9375rem, 1.2vw, 1.0625rem);
+    line-height: 1.5;
+    color: var(--c-text-soft);
+    text-shadow: 0 1px 12px color-mix(in srgb, var(--c-overlay) 60%, transparent);
+  }
+
+  /* Avance de la secuencia, a la derecha (solo escritorio). */
+  .hero[data-scrolly="full"] .rail {
+    position: absolute;
+    z-index: 2;
+    right: var(--gutter);
+    top: 50%;
+    display: grid;
+    gap: 1.1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    transform: translateY(-50%);
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .rail li {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+
+  .railLabel {
+    font-size: 0.6875rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+    text-shadow: 0 1px 10px color-mix(in srgb, var(--c-overlay) 70%, transparent);
+    transition: color 0.4s ease;
+  }
+
+  .railDot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border: 1px solid var(--c-text-muted);
+    border-radius: 50%;
+    transition:
+      background-color 0.4s ease,
+      border-color 0.4s ease,
+      transform 0.4s var(--ease-out);
+  }
+
+  .rail li[data-past] .railDot {
+    background: var(--c-text-muted);
+  }
+
+  .rail li[data-active] .railLabel {
+    color: var(--c-text);
+  }
+
+  .rail li[data-active] .railDot {
+    border-color: var(--c-accent);
+    background: var(--c-accent);
+    transform: scale(1.5);
+  }
+
+  /* Unión con la sección siguiente: la parte baja se funde con el fondo. */
+  .hero[data-scrolly] .bridge {
+    position: absolute;
+    inset: auto 0 0;
+    z-index: 1;
+    display: block;
+    height: 42%;
+    background: linear-gradient(to bottom, transparent, var(--c-bg));
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .hero[data-scrolly] .endCue {
+    z-index: 2;
+    display: inline-flex;
+    opacity: 0;
+    visibility: hidden;
+    color: var(--c-text);
+  }
+
+  .hero[data-scrolly] .tag {
+    z-index: 2;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem);
+  }
+}
+
+@keyframes cue {
+  0% {
+    transform: translateY(-100%);
+  }
+  60%,
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* Sin JavaScript no hay escena: titular compacto arriba, con el texto y los
+   botones visibles sobre la foto de la casa. */
+@media (scripting: none) {
+  .hero .stage {
+    --p: 1;
+  }
+
+  .hero .intro {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@media (max-width: 899.98px) {
+  .hero {
+    --title-scale: 0.6;
+    --bottom-pad: 5.25rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .stills {
+    grid-template-columns: 1fr;
+  }
+
+  .tag {
+    left: var(--gutter);
+    right: auto;
+    bottom: 1.25rem;
+  }
+
+  .cue,
+  .endCue {
+    display: none;
+  }
+
+  .hero[data-scrolly] .endCue {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .eyebrow,
+  .line > span,
+  .cueLine::after {
+    animation: none;
+  }
+}
