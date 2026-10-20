@@ -1,7 +1,8 @@
+import { pageMetadata } from "@/content/seo";
 import type { Metadata } from "next";
 import { PendingPage } from "@/components/sections/PendingPage";
 
-export const metadata: Metadata = { title: "Política de datos" };
+export const metadata: Metadata = pageMetadata("/politica-de-datos");
 
 export default function Page() {
   return (

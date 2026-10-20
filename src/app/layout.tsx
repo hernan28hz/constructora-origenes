@@ -3,6 +3,8 @@ import { Inter, Saira } from "next/font/google";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SmoothScroll } from "@/components/motion/SmoothScroll";
+import { JsonLd } from "@/components/brand/JsonLd";
+import { seo, siteUrl } from "@/content/seo";
 import { site } from "@/content/site";
 import "./globals.css";
 
@@ -21,12 +23,25 @@ const sans = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: `${site.name} · ${site.descriptor}`,
+    default: seo.title,
     template: `%s · ${site.name}`,
   },
-  description:
-    "Comercialización de lotes y terrenos, y portafolio de obras de infraestructura vial ejecutadas.",
+  description: seo.description,
+  applicationName: site.name,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "es_CO",
+    siteName: site.name,
+    title: seo.title,
+    description: seo.description,
+    url: "/",
+  },
+  twitter: { card: "summary_large_image", title: seo.title, description: seo.description },
+  // La imagen de Open Graph/Twitter viene de opengraph-image.jpg y twitter-image.jpg.
+  formatDetection: { telephone: false, email: false, address: false },
 };
 
 // Grafito oficial: color de la barra del navegador en móviles.
@@ -36,10 +51,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" className={`${display.variable} ${sans.variable}`}>
+    <html lang="es-CO" className={`${display.variable} ${sans.variable}`}>
       {/* Extensiones del navegador (p. ej. ColorZilla) añaden atributos al
           body antes de que cargue React; se ignora solo esa diferencia. */}
       <body suppressHydrationWarning>
+        <JsonLd />
         <a href="#contenido" className="skip-link">
           Saltar al contenido
         </a>

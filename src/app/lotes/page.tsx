@@ -1,8 +1,9 @@
+import { pageMetadata } from "@/content/seo";
 import type { Metadata } from "next";
 import { PendingPage, SpecSheet } from "@/components/sections/PendingPage";
 import { parcelaciones } from "@/content/parcelaciones";
 
-export const metadata: Metadata = { title: "Lotes y terrenos" };
+export const metadata: Metadata = pageMetadata("/lotes");
 
 export default function Page() {
   return (

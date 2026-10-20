@@ -1,8 +1,9 @@
+import { pageMetadata } from "@/content/seo";
 import type { Metadata } from "next";
 import { PendingPage, SpecSheet } from "@/components/sections/PendingPage";
 import { obras } from "@/content/obras";
 
-export const metadata: Metadata = { title: "Obras ejecutadas" };
+export const metadata: Metadata = pageMetadata("/proyectos");
 
 export default function Page() {
   return (

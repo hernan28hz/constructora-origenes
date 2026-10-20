@@ -1,8 +1,9 @@
+import { pageMetadata } from "@/content/seo";
 import type { Metadata } from "next";
 import { PendingPage, SpecSheet } from "@/components/sections/PendingPage";
 import { site } from "@/content/site";
 
-export const metadata: Metadata = { title: "Contacto" };
+export const metadata: Metadata = pageMetadata("/contacto");
 
 export default function Page() {
   const { contact } = site;
